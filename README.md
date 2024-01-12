@@ -1,7 +1,10 @@
 # MeiseiUniv-LyX-Layout
 LyX layout file for graduation thesis of Department of Economics at Meisei University, Tokyo
+
 明星大学経済学部卒業論文の様式に沿ったLyX用レイアウトファイルです。
+
 組織名を変更したい場合には、レイアウトファイル中のPreamble1行目の\organizationの定義を変更してください。
+
 JLreq reportをベーススタイルとして使用しています。
 
 使用法（その１）
