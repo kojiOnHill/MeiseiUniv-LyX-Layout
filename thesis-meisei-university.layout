@@ -6,14 +6,14 @@
 # Author : Koji Yokota (koji.yokota@meisei-u.ac.jp)
 #
 # This class internally loads following packages:
-# Any time:			 	l3keys2e, lmodern
+# Any time:		l3keys2e, lmodern
 # With non-LuaLaTeX:	everyhook
-# With LuaLaTeX:		luatexja, luatexja-adjust
+# With LuaLaTeX:	luatexja, luatexja-adjust
 
 Format 66
 
 ClassOptions
-	Other				"report, paper=a4paper, fontsize=11pt, number_of_lines=20, gutter=30mm, fore-edge=30mm, head_space=35mm, foot_space=35mm, baselineskip=3zw, frontmatter_pagination={roman,independent}"
+	Other	"report, paper=a4paper, fontsize=11pt, number_of_lines=20, gutter=30mm, fore-edge=30mm, head_space=35mm, foot_space=35mm, baselineskip=3zw, frontmatter_pagination={roman,independent}"
 End
 
 TitleLatexName			thesisTitlePage
@@ -82,7 +82,7 @@ Style 著者
 	LabelFont
 		Color			Green
 	EndFont
-	BottomSep           0.7
+	BottomSep           		0.7
 	Preamble
 		\newcommand{\thesisAuthor}[2]{%
 		   \begin{textblock*}{128mm}(49mm, 204mm)%
@@ -116,7 +116,7 @@ Style 指導教員名
 	LabelType			Static
 	LabelString			年度および指導教員名：
 	LeftMargin			年度および指導教員名：
-	BottomSep           0.7
+	BottomSep           		0.7
 	LabelFont
 		Color			Green
 	EndFont
