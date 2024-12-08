@@ -6,145 +6,144 @@
 # Author : Koji Yokota (koji.yokota@meisei-u.ac.jp)
 #
 # This class internally loads following packages:
-# Any time:			 	l3keys2e, lmodern
-# With non-LuaLaTeX:	everyhook
-# With LuaLaTeX:		luatexja, luatexja-adjust
+# Any time:             l3keys2e, lmodern
+# With non-LuaLaTeX:    everyhook
+# With LuaLaTeX:        luatexja, luatexja-adjust
 
 Format 66
 
 ClassOptions
-	Other				"report, paper=a4paper, fontsize=11pt, number_of_lines=20, gutter=30mm, fore-edge=30mm, head_space=35mm, foot_space=35mm, baselineskip=3zw, frontmatter_pagination={roman,independent}"
+    Other               "report, paper=a4paper, fontsize=11pt, number_of_lines=20, gutter=30mm, fore-edge=30mm, head_space=35mm, foot_space=35mm, baselineskip=3zw, frontmatter_pagination={roman,independent}"
 End
 
-TitleLatexName			thesisTitlePage
-TitleLatexType			Environment
+TitleLatexName          thesisTitlePage
+TitleLatexType          Environment
 
 # 別組織で運用したいときには、下記の1行目\organizationの定義を変更してください。
 Preamble
-	\newcommand{\organization}{明星大学経済学部経済学科}
-	\setlength{\tabcolsep}{4mm}
-	\renewcommand{\arraystretch}{1.1}
-	\renewcommand{\jlreqkanjiskip}{.3\zw plus .1\zw minus .01\zw}
-	\newenvironment{thesisTitlePage}{\begin{titlepage}}{%
-		\strut\end{titlepage}\newpage\tableofcontents\thispagestyle{empty}\newpage%
-	}
+    \newcommand{\organization}{明星大学経済学部経済学科}
+    \setlength{\tabcolsep}{4mm}
+    \renewcommand{\arraystretch}{0.5}
+    \renewcommand{\jlreqkanjiskip}{.3\zw plus .1\zw minus .01\zw}
+    \newenvironment{thesisTitlePage}{\begin{titlepage}}{%
+        \strut\end{titlepage}\newpage\tableofcontents\thispagestyle{empty}\newpage%
+    }
 EndPreamble
 
 Style 表題
-	Margin				Static
-	LatexType			Command
-	Category			FrontMatter
-	InTitle				1
-	LatexName			thesisTitle
-	ParSkip				0.4
-	ItemSep				0
-	TopSep				0
-	BottomSep			1
-	ParSep				1
-	Align				Center
-	LabelType			No_Label
-	Font
-	  Size				Largest
-	EndFont
-	HTMLTag				h1
-	HTMLTitle			true
-	Preamble
-		\usepackage[absolute]{textpos}
-		\newcommand{\thesisTitle}[1]{%
-		   \begin{textblock*}{158mm}(27mm, 118mm)%
-		      \begin{tabular}{|c|c|}\hline%
-		         \raisebox{0mm}[26mm][26mm]{\parbox{6mm}{\centering \Large 論題}} &%
-		         \protect\parbox{128mm}{\centering \huge #1} \\%
-		         \hline%
-		      \end{tabular}%
-		   \end{textblock*}
-		}
-	EndPreamble
+    Margin              Static
+    LatexType           Command
+    Category            FrontMatter
+    InTitle             1
+    LatexName           thesisTitle
+    ParSkip             0.4
+    ItemSep             0
+    TopSep              0
+    BottomSep           1
+    ParSep              1
+    Align               Center
+    LabelType           No_Label
+    Font
+      Size              Largest
+    EndFont
+    HTMLTag             h1
+    HTMLTitle           true
+    Preamble
+        \usepackage[absolute]{textpos}
+        \newcommand{\thesisTitle}[1]{%
+           \begin{textblock*}{158mm}(27mm, 118mm)%
+              \begin{tabular}{|c|c|}\hline%
+                 \raisebox{0mm}[26mm][26mm]{\parbox{6mm}{\centering \Large 論題}} &%
+                 \protect\parbox{128mm}{\centering \huge #1} \\%
+                 \hline%
+              \end{tabular}%
+           \end{textblock*}
+        }
+    EndPreamble
 End
 
 Style 著者
-	Margin				Static
-	LatexType			Command
-	Category			FrontMatter
-	InTitle				1
-	LatexName			thesisAuthor
-	Argument 1
-		LabelString		学籍番号
-		MenuString		学籍番号(I)|I
-		Mandatory		1
-		DefaultArg		"学籍番号を入力してください"
-		AutoInsert		1
-	EndArgument
-	Align				Left
-	LabelType			Static
-	LabelString			学籍番号および氏名　：
-	LeftMargin			学籍番号および氏名　：
-	LabelFont
-		Color			Green
-	EndFont
-	BottomSep           0.7
-	Preamble
-		\newcommand{\thesisAuthor}[2]{%
-		   \begin{textblock*}{128mm}(49mm, 204mm)%
-		      \begin{tabular}{|c|c|c|}\hline%
-		         \multicolumn{3}{|c|}{\raisebox{1mm}{%
-		          	\centering \akigumi{11pt}{\organization}}} \\%
-		         \hline%
-		         \parbox{6mm}{\centering　氏　名　} &%
-		         \protect\parbox{26mm}{\centering \akigumi{3mm}{#1}} &%
-		         \protect\parbox{67mm}{\centering \Large #2} \\%
-		         \hline%
-		      \end{tabular}%
-		   \end{textblock*}
-		}
-	EndPreamble
+    Margin              Static
+    LatexType           Command
+    Category            FrontMatter
+    InTitle             1
+    LatexName           thesisAuthor
+    Argument 1
+        LabelString     学籍番号
+        MenuString      学籍番号(I)|I
+        Mandatory       1
+        DefaultArg      "学籍番号を入力してください"
+        AutoInsert      1
+    EndArgument
+    Align               Left
+    LabelType           Static
+    LabelString         学籍番号および氏名　：
+    LeftMargin          学籍番号および氏名　：
+    LabelFont
+        Color           Green
+    EndFont
+    BottomSep           0.7
+    Preamble
+        \newcommand{\thesisAuthor}[2]{%
+           \begin{textblock*}{128mm}(49mm, 204mm)%
+              \begin{tabular}{|c|c|c|}\hline%
+                 \multicolumn{3}{|c|}{\raisebox{1mm}{%
+                    \centering \akigumi{11pt}{\organization}}} \\%
+                 \hline%
+                 \parbox{6mm}{\centering　氏名　} &%
+                 \protect\parbox{26mm}{\centering \akigumi{3mm}{#1}} &%
+                 \protect\parbox{67mm}{\centering \Large #2} \\%
+                 \hline%
+              \end{tabular}%
+           \end{textblock*}
+        }
+    EndPreamble
 End
 
 Style 指導教員名
-	Margin				Static
-	LatexType			Command
-	Category			FrontMatter
-	InTitle				1
-	LatexName			advisor
-	Argument 1
-		LabelString		論文提出年度
-		MenuString		論文提出年度(Y)|Y
-		Mandatory		1
-		DefaultArg		\number\year
-		AutoInsert		1
-	EndArgument
-	LabelType			Static
-	LabelString			年度および指導教員名：
-	LeftMargin			年度および指導教員名：
-	BottomSep           0.7
-	LabelFont
-		Color			Green
-	EndFont
-	Preamble
-		\newcommand{\advisor}[2]{%
-		   \vspace*{9mm}%
-		   \begin{tabular}{|c|c|}\hline%
-		      \multicolumn{2}{|c|}{%
-		         \protect\raisebox{1mm}{\akigumi{11pt}{#1年度卒業論文}}%
-		      } \\%
-		      \hline%
-		      \raisebox{0mm}[13mm][12mm]{%
-		         \protect\parbox{13mm}{%
-		            \centering \akigumi{2pt}{指導}\\%
-		            \rule{0pt}{16pt}\\%
-		            \akigumi{2pt}{教員}%
-		         }%
-		      } &%
-		      \protect\parbox{75mm}{\centering \akigumi{11pt}{#2先生}} \\%
-		      \hline%
-		   \end{tabular}%
-		}%
-	EndPreamble
+    Margin              Static
+    LatexType           Command
+    Category            FrontMatter
+    InTitle             1
+    LatexName           advisor
+    Argument 1
+        LabelString     論文提出年度
+        MenuString      論文提出年度(Y)|Y
+        Mandatory       1
+        DefaultArg      \number\year
+        AutoInsert      1
+    EndArgument
+    LabelType           Static
+    LabelString         年度および指導教員名：
+    LeftMargin          年度および指導教員名：
+    BottomSep           0.7
+    LabelFont
+        Color           Green
+    EndFont
+    Preamble
+        \newcommand{\advisor}[2]{%
+           \vspace*{9mm}%
+           \begin{tabular}{|c|c|}\hline%
+              \multicolumn{2}{|c|}{%
+                 \protect\raisebox{1mm}{\akigumi{11pt}{#1年度卒業論文}}%
+              } \\%
+              \hline%
+              \raisebox{0mm}[13mm][12mm]{%
+                 \protect\parbox{13mm}{%
+                    \centering \akigumi{2pt}{指導}\\%
+                    \akigumi{2pt}{教員}%
+                 }%
+              } &%
+              \protect\parbox{75mm}{\centering \akigumi{11pt}{#2先生}} \\%
+              \hline%
+           \end{tabular}%
+        }%
+    EndPreamble
 End
 
 # Input general definitions
 Input report.layout
-NoStyle	Title
+NoStyle Title
 NoStyle Author
 NoStyle Abstract_over_Columns
 
