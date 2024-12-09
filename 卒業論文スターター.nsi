@@ -16,14 +16,16 @@ Page components
 Page directory "pre-directory" "" ""
 Page instfiles
 
-#LicenseData "LICENSE.txt"
+LicenseData "LICENSE.txt"
 
 Section "卒業論文用LyXレイアウト"
 	ReadEnvStr $0 "HOMEDRIVE"
 	ReadEnvStr $1 "HOMEPATH"
 	SetOutPath "$0$1\AppData\Roaming\LyX${VERSION}\layouts"
+	SetOverwrite on
 	File "明星大学経済学部卒業論文.layout"
 	File "卒業論文スケルトン.layout"
+	SetOverwrite off
 SectionEnd
 
 Section "JPA BibLaTeXスタイル"
@@ -32,9 +34,11 @@ Section "JPA BibLaTeXスタイル"
 	StrCpy $JPA_DIR "$0$1\texmf\tex\latex\biblatex\jpa"
 	SetOutPath $JPA_DIR
 	CreateDirectory $JPA_DIR
+	SetOverwrite on
 	File "jpa.bbx"
 	File "jpa.cbx"
 	File "jpa.dbx"
+	SetOverwrite off
 SectionEnd
 
 Section "卒業論文ひな型" SEC_TEMPLATES
