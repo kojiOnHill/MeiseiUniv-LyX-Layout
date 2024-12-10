@@ -16,15 +16,15 @@ Page components
 Page directory "pre-directory" "" ""
 Page instfiles
 
-LicenseData "../LICENSE"
+LicenseData "..\LICENSE"
 
 Section "卒業論文用LyXレイアウト"
 	ReadEnvStr $0 "HOMEDRIVE"
 	ReadEnvStr $1 "HOMEPATH"
 	SetOutPath "$0$1\AppData\Roaming\LyX${VERSION}\layouts"
 	SetOverwrite on
-	File "../meisei.layout"
-	File "../meisei-skeleton.layout"
+	File "..\meisei.layout"
+	File "..\meisei-skeleton.layout"
 	SetOverwrite off
 SectionEnd
 
@@ -35,20 +35,20 @@ Section "卒業論文用BibLaTeXスタイル"
 	SetOutPath $JPA_DIR
 	CreateDirectory $JPA_DIR
 	SetOverwrite on
-	File "../biblatex/meisei.bbx"
-	File "../biblatex/meisei.cbx"
-	File "../biblatex/meisei.dbx"
-	File "../biblatex/jpa.bbx"
-	File "../biblatex/jpa.cbx"
-	File "../biblatex/jpa.dbx"
+	File "..\biblatex\meisei.bbx"
+	File "..\biblatex\meisei.cbx"
+	File "..\biblatex\meisei.dbx"
+	File "..\biblatex\jpa.bbx"
+	File "..\biblatex\jpa.cbx"
+	File "..\biblatex\jpa.dbx"
 	SetOverwrite off
 SectionEnd
 
 Section "卒業論文ひな型" SEC_TEMPLATES
 	SetOutPath $INSTDIR
-	File "../templates/卒業論文.lyx"
-	File "../templates/スケルトン.lyx"
-	File "../templates/マイ・ライブラリ.bib"
+	File "..\templates\卒業論文.lyx"
+	File "..\templates\スケルトン.lyx"
+	File "..\templates\マイ・ライブラリ.bib"
 SectionEnd
 
 Function pre-directory
