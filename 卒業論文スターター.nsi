@@ -28,16 +28,16 @@ Section "卒業論文用LyXレイアウト"
 	SetOverwrite off
 SectionEnd
 
-Section "JPA BibLaTeXスタイル"
+Section "卒業論文用BibLaTeXスタイル"
 	ReadEnvStr $0 "HOMEDRIVE"
 	ReadEnvStr $1 "HOMEPATH"
 	StrCpy $JPA_DIR "$0$1\texmf\tex\latex\biblatex\jpa"
 	SetOutPath $JPA_DIR
 	CreateDirectory $JPA_DIR
 	SetOverwrite on
-	File "jpa.bbx"
-	File "jpa.cbx"
-	File "jpa.dbx"
+	File "meisei.bbx"
+	File "meisei.cbx"
+	File "meisei.dbx"
 	SetOverwrite off
 SectionEnd
 
@@ -63,5 +63,5 @@ VIAddVersionKey "CompanyName" "明星大学"
 VIAddVersionKey "LegalCopyright" "(c) Koji Yokota"
 VIAddVersionKey "ProductName" "明星大学経済学部卒業論文スターター"
 VIAddVersionKey "FileDescription" "明星大学経済学部の卒業論文執筆に必要なファイルをインストールします"
-VIAddVersionKey "FileVersion" "1.0"
+VIAddVersionKey "FileVersion" "1.2"
 VIProductVersion 1.0.0.0
