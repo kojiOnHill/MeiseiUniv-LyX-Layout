@@ -16,7 +16,7 @@ Page components
 Page directory "pre-directory" "" ""
 Page instfiles
 
-LicenseData "LICENSE.txt"
+LicenseData "../LICENSE"
 
 Section "卒業論文用LyXレイアウト"
 	ReadEnvStr $0 "HOMEDRIVE"
