@@ -1,7 +1,7 @@
 #% Do not delete the line below; configure depends on this
 #  \DeclareLaTeXClass[jlreq,l3keys2e.sty,lmodern.sty]{明星大学経済学部卒業論文}
 #  \DeclareCategory{Articles}
-# book textclass definition file for the graduation thesis of Department of Economics
+# textclass definition file for the graduation thesis of Department of Economics
 # at Meisei University.
 # Author : Koji Yokota (koji.yokota@meisei-u.ac.jp)
 #
