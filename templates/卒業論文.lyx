@@ -1,0 +1,214 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass 明星大学経済学部卒業論文
+\begin_preamble
+\renewcommand{\jlreqkanjiskip}{0\zw plus .25\zw minus 0\zw}
+\end_preamble
+\options report
+\use_default_options false
+\maintain_unincluded_children no
+\language japanese
+\language_package default
+\inputencoding auto-legacy
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts true
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format pdf5
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine biblatex
+\cite_engine_type authoryear
+\biblio_style plainnat
+\biblatex_bibstyle jpa
+\biblatex_citestyle jpa
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style cjk
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout 表題
+論文
+\end_layout
+
+\begin_layout 著者
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+20E1-000
+\end_layout
+
+\end_inset
+
+一学生
+\end_layout
+
+\begin_layout 指導教員名
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+2024
+\end_layout
+
+\end_inset
+
+横田宏治
+\end_layout
+
+\begin_layout Chapter
+はじめに
+\end_layout
+
+\begin_layout Standard
+　源頼朝の平家討伐には、武蔵武士は当然のこととして参加していた。
+一の谷の合戦のさいの陣容は『吾妻鏡』によると、次の通りであった。
+ 寿永三年二月五日、源氏の両将、摂津国に到る。
+七日朝六時を以て、箭合（やあわ）せの期と定む。
+大手の大将軍は蒲冠者範頼（がまかじゃのりより）なり。
+相従うの輩（ともがら）は 中条家長・庄司忠家・同広方・塩谷惟広・庄家長・秩父行綱・小代八郎行平の児玉党の他に、畠山重忠以下二十四名が記載されており、総勢五万六千余騎であった。
+ 搦手（からめて）の大将軍は、源九郎義経なり。
+相従う輩は 熊谷直実・同直家以下十五名が記載され、総勢二万余騎であった。
+ 文治五年（一一八九）七月、頼朝の奥州征伐にさいし御供の輩は、児玉党には 四方田三郎弘長　小越右馬之允有弘 浅羽五郎行長　　小代八郎行平 建久元年（一一九〇）十一月、頼朝上洛のさいは 先陣畠山次郎重忠　二番熊谷小次郎直家 四番小越四郎有平　十三番浅羽小三郎行元 後陣五番小越右馬允有弘　十八番倉賀野三郎 二十二番大河原次郎・小代八郎行平　二十四番浅羽五郎行長 三十四番浅羽三郎（遠江） 建久六年（一一九五）頼朝が東大寺落成供養会に上洛したときの隨兵は、 小代八郎　浅羽三郎　倉賀野三郎　浅羽庄司三郎　四方田三郎 以上の児玉党の武士が含まれていた。
+ 　時代が下って、南北朝時代になると、延元（えんげん）三年（一三三八）五月二二日に、越生四郎左衛門尉は高師直の手に属し、南朝の忠臣北畠顕家を打取った。
+顕家は「和泉（いずみ）の境、安部野（あべの）にて討死にし給いければ、相従う兵（つわもの）悉く腹切り創（きず）を被（こうむ）って、一人も残らず失（う）せにけり。
+顕家卿をば、武蔵国の越生四郎左衛門討ち奉りしかば……」（『太平記』巻十九）とある。
+正平（しょうへい）一〇年（一三五五）摂津神内（こうない）（高槻市内）で戦われた神内合戦で討死した武士の一人に、粟生田左衛門次郎の名が見える。
+（
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Uzawa2008"
+literal "false"
+
+\end_inset
+
+）
+\end_layout
+
+\begin_layout Chapter
+本文
+\end_layout
+
+\begin_layout Section
+見出し
+\end_layout
+
+\begin_layout Standard
+源頼朝の平家討伐には、武蔵武士は当然のこととして参加していた。
+一の谷の合戦のさいの陣容は『吾妻鏡』によると、次の通りであった。
+ 寿永三年二月五日、源氏の両将、摂津国に到る。
+七日朝六時を以て、箭合（やあわ）せの期と定む。
+大手の大将軍は蒲冠者範頼（がまかじゃのりより）なり。
+相従うの輩（ともがら）は 中条家長・庄司忠家・同広方・塩谷惟広・庄家長・秩父行綱・小代八郎行平の児玉党の他に、畠山重忠以下二十四名が記載されており、総勢五万六千余騎であった。
+ 搦手（からめて）の大将軍は、源九郎義経なり。
+相従う輩は 熊谷直実・同直家以下十五名が記載され、総勢二万余騎であった。
+ 文治五年（一一八九）七月、頼朝の奥州征伐にさいし御供の輩は、児玉党には 四方田三郎弘長　小越右馬之允有弘 浅羽五郎行長　　小代八郎行平 建久元年（一一九〇）十一月、頼朝上洛のさいは 先陣畠山次郎重忠　二番熊谷小次郎直家 四番小越四郎有平　十三番浅羽小三郎行元 後陣五番小越右馬允有弘　十八番倉賀野三郎 二十二番大河原次郎・小代八郎行平　二十四番浅羽五郎行長 三十四番浅羽三郎（遠江） 建久六年（一一九五）頼朝が東大寺落成供養会に上洛したときの隨兵は、 小代八郎　浅羽三郎　倉賀野三郎　浅羽庄司三郎　四方田三郎 以上の児玉党の武士が含まれていた。
+ 　時代が下って、南北朝時代になると、延元（えんげん）三年（一三三八）五月二二日に、越生四郎左衛門尉は高師直の手に属し、南朝の忠臣北畠顕家を打取った。
+顕家は「和泉（いずみ）の境、安部野（あべの）にて討死にし給いければ、相従う兵（つわもの）悉く腹切り創（きず）を被（こうむ）って、一人も残らず失（う）せにけり。
+顕家卿をば、武蔵国の越生四郎左衛門討ち奉りしかば……」（『太平記』巻十九）とある。
+正平（しょうへい）一〇年（一三五五）摂津神内（こうない）（高槻市内）で戦われた神内合戦で討死した武士の一人に、粟生田左衛門次郎の名が見える。
+（『同書』巻三十二）
+\end_layout
+
+\begin_layout Chapter
+おわりに
+\end_layout
+
+\begin_layout Standard
+源頼朝の平家討伐には、武蔵武士は当然のこととして参加していた。
+一の谷の合戦のさいの陣容は『吾妻鏡』によると、次の通りであった。
+ 寿永三年二月五日、源氏の両将、摂津国に到る。
+七日朝六時を以て、箭合（やあわ）せの期と定む。
+大手の大将軍は蒲冠者範頼（がまかじゃのりより）なり。
+相従うの輩（ともがら）は 中条家長・庄司忠家・同広方・塩谷惟広・庄家長・秩父行綱・小代八郎行平の児玉党の他に、畠山重忠以下二十四名が記載されており、総勢五万六千余騎であった。
+ 搦手（からめて）の大将軍は、源九郎義経なり。
+相従う輩は 熊谷直実・同直家以下十五名が記載され、総勢二万余騎であった。
+ 文治五年（一一八九）七月、頼朝の奥州征伐にさいし御供の輩は、児玉党には 四方田三郎弘長　小越右馬之允有弘 浅羽五郎行長　　小代八郎行平 建久元年（一一九〇）十一月、頼朝上洛のさいは 先陣畠山次郎重忠　二番熊谷小次郎直家 四番小越四郎有平　十三番浅羽小三郎行元 後陣五番小越右馬允有弘　十八番倉賀野三郎 二十二番大河原次郎・小代八郎行平　二十四番浅羽五郎行長 三十四番浅羽三郎（遠江） 建久六年（一一九五）頼朝が東大寺落成供養会に上洛したときの隨兵は、 小代八郎　浅羽三郎　倉賀野三郎　浅羽庄司三郎　四方田三郎 以上の児玉党の武士が含まれていた。
+ 　時代が下って、南北朝時代になると、延元（えんげん）三年（一三三八）五月二二日に、越生四郎左衛門尉は高師直の手に属し、南朝の忠臣北畠顕家を打取った。
+顕家は「和泉（いずみ）の境、安部野（あべの）にて討死にし給いければ、相従う兵（つわもの）悉く腹切り創（きず）を被（こうむ）って、一人も残らず失（う）せにけり。
+顕家卿をば、武蔵国の越生四郎左衛門討ち奉りしかば……」（『太平記』巻十九）とある。
+正平（しょうへい）一〇年（一三五五）摂津神内（こうない）（高槻市内）で戦われた神内合戦で討死した武士の一人に、粟生田左衛門次郎の名が見える。
+（『同書』巻三十二）
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "マイ・ライブラリ"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

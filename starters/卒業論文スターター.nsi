@@ -7,7 +7,7 @@ Icon "明星大学ロゴx64.ico"
 
 Name "明星大学経済学部卒業論文スターター"
 LoadLanguageFile "${NSISDIR}\Contrib\Language files\Japanese.nlf"
-OutFile "卒業論文スターター.exe"
+OutFile "卒業論文スターター for Windows.exe"
 
 Var "JPA_DIR"
 
@@ -31,7 +31,7 @@ SectionEnd
 Section "卒業論文用BibLaTeXスタイル"
 	ReadEnvStr $0 "HOMEDRIVE"
 	ReadEnvStr $1 "HOMEPATH"
-	StrCpy $JPA_DIR "$0$1\texmf\tex\latex\biblatex\jpa"
+	StrCpy $JPA_DIR "$0$1\texmf\tex\latex\biblatex\meisei"
 	SetOutPath $JPA_DIR
 	CreateDirectory $JPA_DIR
 	SetOverwrite on
