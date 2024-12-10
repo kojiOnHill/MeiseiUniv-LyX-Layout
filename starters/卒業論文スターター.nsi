@@ -24,7 +24,7 @@ Section "卒業論文用LyXレイアウト"
 	SetOutPath "$0$1\AppData\Roaming\LyX${VERSION}\layouts"
 	SetOverwrite on
 	File "../明星大学経済学部卒業論文.layout"
-	File "../卒業論文スケルトン.layout"
+	File "../明星大学経済学部卒業論文スケルトン.layout"
 	SetOverwrite off
 SectionEnd
 
