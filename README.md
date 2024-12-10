@@ -8,8 +8,9 @@ LyX layout file for graduation thesis of Department of Economics at Meisei Unive
 JLreq reportをベーススタイルとして使用しています。
 
 使用法（その１）
-- Windowsの場合、卒業論文スターター.exeを使用して、レイアウト等のインストールを行います。このスターターは、下記の
+- Windowsの場合、卒業論文スターター for Windows.exeを使用して、レイアウト等のインストールを行います。このスターターは、下記の
   「使用法（その２）」と同じ操作をする他、卒業論文のひな型をインストールします。
+- MacOSの場合、卒業論文スターター for MacOS.appを使用して、同様の操作を行います。Zip形式で圧縮されているので、解凍してから使用してください。
 
 使用法（その２）
 - レイアウトファイルを以下のLyXのリソースディレクトリに置きます。
