@@ -1,5 +1,5 @@
 #% Do not delete the line below; configure depends on this
-#  \DeclareLaTeXClass[jlreq,l3keys2e.sty,lmodern.sty]{卒業論文スケルトン}
+#  \DeclareLaTeXClass[jlreq,l3keys2e.sty,lmodern.sty]{明星大学経済学部卒業論文スケルトン}
 #  \DeclareCategory{Articles}
 # book textclass definition file for the graduation thesis of Department of Economics
 # at Meisei University.
