@@ -26,7 +26,7 @@ Preamble
     \renewcommand{\arraystretch}{0.5}
     \renewcommand{\jlreqkanjiskip}{.3\zw plus .1\zw minus .01\zw}
     \newenvironment{thesisTitlePage}{\begin{titlepage}}{%
-        \strut\end{titlepage}\newpage\tableofcontents\thispagestyle{empty}\newpage%
+        \strut\end{titlepage}\newpage\pagestyle{empty}\tableofcontents\newpage\pagestyle{plain}%
     }
 EndPreamble
 

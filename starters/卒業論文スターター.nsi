@@ -23,6 +23,8 @@ Section "卒業論文用LyXレイアウト"
 	ReadEnvStr $1 "HOMEPATH"
 	SetOutPath "$0$1\AppData\Roaming\LyX${VERSION}\layouts"
 	SetOverwrite on
+	Delete "$0$1\AppData\Roaming\LyX${VERSION}\layouts\明星大学経済学部卒業論文.layout"
+	Delete "$0$1\AppData\Roaming\LyX${VERSION}\layouts\卒業論文スケルトン.layout"
 	File "..\meisei.layout"
 	File "..\meisei-skeleton.layout"
 	SetOverwrite off
