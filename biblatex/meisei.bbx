@@ -17,4 +17,21 @@
 
 \RequireBibliographyStyle{jpa}
 
+%%% URLと取得日 %%%
+\DeclareFieldFormat{url}{%
+  \renewcommand*{\finentrypunct}{}%
+  \\\url{#1}\nopunct%
+}
+\DeclareFieldFormat{urldate}{%
+  （\thefield{urlyear}年%
+  \iffieldundef{urlmonth}{}{\thefield{urlmonth}月}%
+  \iffieldundef{urldate}{}{\thefield{urldate}日} 参照）%
+  \ifthenelse{\boolean{japanese}}{}{\addcomma}%
+}
+% 表示
+\renewbibmacro*{url+urldate}{%
+  \iffieldundef{urlyear}
+  {}
+  {\printfield{url}\setunit{\addspace}}\printurldate}
+
 \endinput
