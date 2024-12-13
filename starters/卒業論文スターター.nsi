@@ -68,5 +68,5 @@ VIAddVersionKey "CompanyName" "明星大学"
 VIAddVersionKey "LegalCopyright" "(c) Koji Yokota"
 VIAddVersionKey "ProductName" "明星大学経済学部卒業論文スターター"
 VIAddVersionKey "FileDescription" "明星大学経済学部の卒業論文執筆に必要なファイルをインストールします"
-VIAddVersionKey "FileVersion" "1.4"
+VIAddVersionKey "FileVersion" "1.5"
 VIProductVersion 1.3.0.0
