@@ -1,5 +1,8 @@
 ﻿Unicode true
-!define VERSION 2.4
+!define VERSION 2.5
+
+# コンパイルを成功させるためには、このファイルのエンコーディングをBOM付きUTF-8にすること
+# 秀丸で設定可能
 
 AddBrandingImage right 80
 BrandingText "明星大学"
@@ -7,7 +10,7 @@ Icon "明星大学ロゴx64.ico"
 
 Name "明星大学経済学部卒業論文スターター"
 LoadLanguageFile "${NSISDIR}\Contrib\Language files\Japanese.nlf"
-OutFile "卒業論文スターター for Windows.exe"
+OutFile "卒業論文スターター2.5 for Windows.exe"
 
 Var "JPA_DIR"
 
@@ -68,5 +71,5 @@ VIAddVersionKey "CompanyName" "明星大学"
 VIAddVersionKey "LegalCopyright" "(c) Koji Yokota"
 VIAddVersionKey "ProductName" "明星大学経済学部卒業論文スターター"
 VIAddVersionKey "FileDescription" "明星大学経済学部の卒業論文執筆に必要なファイルをインストールします"
-VIAddVersionKey "FileVersion" "1.5"
+VIAddVersionKey "FileVersion" "2.5"
 VIProductVersion 1.3.0.0
