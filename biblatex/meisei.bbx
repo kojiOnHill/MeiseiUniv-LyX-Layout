@@ -26,7 +26,7 @@
   （\thefield{urlyear}年%
   \iffieldundef{urlmonth}{}{\thefield{urlmonth}月}%
   \iffieldundef{urldate}{}{\thefield{urldate}日} 参照）%
-  \ifthenelse{\boolean{japanese}}{}{\addcomma}%
+  \ifthenelse{\boolean{japanese} \OR \boolean{Japanese} \OR \boolean{ja}}{}{\addcomma}%
 }
 % 表示
 \renewbibmacro*{url+urldate}{%
