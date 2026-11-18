@@ -17,6 +17,108 @@
 
 \RequireBibliographyStyle{jpa}
 
+%%% boolean{japanese}を再定義 %%%
+%%% language が japanese 以外に ja, jpn, Japanese でも反応するようにする %%%
+\setboolean{japanese}{false}
+\AtEveryBibitem{
+  \iflistundef{language}{}{%
+    \ifthenelse{%
+      \equal{\thefirstlistitem{language}}{japanese}\OR
+      \equal{\thefirstlistitem{language}}{Japanese}\OR
+      \equal{\thefirstlistitem{language}}{ja}\OR
+      \equal{\thefirstlistitem{language}}{jp}\OR
+      \equal{\thefirstlistitem{language}}{jpn}\OR
+      \equal{\thefirstlistitem{language}}{日本語}}{%
+      \setboolean{japanese}{true}%
+      % jpa.bbx では language = japanese のときのみ行われる区切りの設定
+      \renewcommand*{\newunitpunct}{}%
+      \renewcommand*{\finentrypunct}{}%
+      \renewcommand*{\multinamedelim}{・}%
+      \renewcommand*{\revsdnamepunct}{\addspace}%
+    }{}%
+  }%
+}
+
+%%% 「著者 (出版年)」直後のピリオドを日本語文献のみ抑制 %%%
+% 引数には外国語文献のときの区切り（jpa.bbx の元の記述）を渡す
+% 日本語文献のときの区切りを変えたい場合は \addspace の部分を書き換える
+\RequirePackage{xpatch}
+\newrobustcmd*{\bbx@nameyearpunct}[1]{%
+  \ifthenelse{\boolean{japanese}}{\addspace}{#1}%
+}
+% パッチ用ヘルパー：#1 = \xpatchbibdriver または \xpatchbibmacro，#2 = 名前，
+% #3 = 年の直後までの記述，#4 = 元の区切り（\setunit 等を含む）
+\newcommand*{\bbx@meisei@nypatch}[5]{%
+  #1{#2}{#3#4{#5}}{#3#4{\bbx@nameyearpunct{#5}}}{}{%
+    \PackageWarningNoLine{biblatex}{meisei.bbx: failed to patch `#2'}}%
+}
+% 雑誌論文・オンライン資料・学位論文・学会発表・新聞記事
+\@for\bbx@tmp:=article,online,thesis,inproceedings,misc\do{%
+  \expandafter\bbx@meisei@nypatch\expandafter\xpatchbibdriver\expandafter{\bbx@tmp}%
+    {\usebibmacro{author+year}}{\setunit}{\addperiod\addspace}}
+% 数巻にわたる書籍（編者・著者）
+\bbx@meisei@nypatch\xpatchbibdriver{mvbook}%
+  {\usebibmacro{editor+year}}{\setunit}{\addperiod\addspace}
+\bbx@meisei@nypatch\xpatchbibdriver{mvbook}%
+  {\usebibmacro{author+year}}{\setunit}{\addperiod\addspace}
+% 編集書の特定章・数巻にわたる書籍の特定の1巻
+\bbx@meisei@nypatch\xpatchbibdriver{inbook}%
+  {\mkbibparens{\printdateextra}}{\setunit}{\addperiod\addspace}
+\bbx@meisei@nypatch\xpatchbibdriver{incollection}%
+  {\mkbibparens{\printdateextra}}{\setunit}{\addperiod\addspace}
+% 年報・年鑑（\setunit を使わず直接ピリオドを出力している）
+\xpatchbibdriver{report}%
+  {\mkbibparens{\printdateextra}\adddot\addspace}%
+  {\mkbibparens{\printdateextra}\bbx@nameyearpunct{\adddot\addspace}}{}{%
+    \PackageWarningNoLine{biblatex}{meisei.bbx: failed to patch `report'}}
+% 書籍（著者・編者）
+\bbx@meisei@nypatch\xpatchbibmacro{book}%
+  {\printtext[parens]{\printdateextra}}{\setunit}{\addperiod\addspace}
+\bbx@meisei@nypatch\xpatchbibmacro{book}%
+  {\printtext[parens]{\printdateextra}}{\setunit}{\adddot\space}
+% 翻訳書の日本語訳部分
+\bbx@meisei@nypatch\xpatchbibmacro{translatedbook}%
+  {\usebibmacro{date+extradate}}{\setunit*}{\addperiod\addspace}
+\bbx@meisei@nypatch\xpatchbibmacro{translatedbook:japanese}%
+  {\usebibmacro{date+extradate}}{\setunit*}{\addperiod\addspace}
+% シリーズ（日本語書籍）の著者・編者
+\bbx@meisei@nypatch\xpatchbibmacro{bookseries:japanese}%
+  {\printtext[parens]{\printdateextra}}{\setunit}{\adddot\addspace}
+\bbx@meisei@nypatch\xpatchbibmacro{bookseries:japanese}%
+  {\printtext[parens]{\printdateextra}}{\setunit}{\adddot\addspace}
+
+%%% 文献末尾のピリオドを日本語文献のみ抑制 %%%
+% 末尾の区切り（\finentrypunct）を言語で切り替える
+\renewcommand*{\finentrypunct}{%
+  \ifthenelse{\boolean{japanese}}{}{\addperiod}%
+}
+% ページ番号の直後に直接ピリオドを出力しているドライバ（article, misc）
+\newrobustcmd*{\bbx@jaomit}[1]{%
+  \ifthenelse{\boolean{japanese}}{}{#1}%
+}
+\@for\bbx@tmp:=article,misc\do{%
+  \expandafter\xpatchbibdriver\expandafter{\bbx@tmp}%
+    {\printfield{pages}\adddot}{\printfield{pages}\bbx@jaomit{\adddot}}{}{%
+      \PackageWarningNoLine{biblatex}{meisei.bbx: failed to patch `\bbx@tmp'}}}
+
+%%% 書籍タイトル %%%
+% 日本語のタイトルには二重鉤括弧、外国語のタイトルは強調
+\DeclareFieldFormat[book,mvbook,online,thesis,inproceedings,incollection]{title}{%
+  \ifthenelse{\boolean{japanese}}{『\thinspace#1\thinspace』}{\emph{#1}}%
+}
+
+%%% 論文タイトル %%%
+\DeclareFieldFormat[article,report,misc,inbook]{title}{%
+  \ifthenelse{\boolean{japanese}}{「\thinspace#1\thinspace」}{\emph{#1}}%
+}
+
+%%% 雑誌名 %%%
+\DeclareFieldFormat[article,misc]{journaltitle}{%
+  \ifthenelse{\boolean{japanese}}{『\thinspace#1\thinspace』}{%
+    \emph{#1}%
+  }%
+}%
+
 %%% URLと取得日 %%%
 \DeclareFieldFormat{url}{%
   \renewcommand*{\finentrypunct}{}%
@@ -26,7 +128,7 @@
   （\thefield{urlyear}年%
   \iffieldundef{urlmonth}{}{\thefield{urlmonth}月}%
   \iffieldundef{urldate}{}{\thefield{urldate}日} 参照）%
-  \ifthenelse{\boolean{japanese} \OR \boolean{Japanese} \OR \boolean{ja}}{}{\addcomma}%
+  \ifthenelse{\boolean{japanese}}{}{\addcomma}%
 }
 % 表示
 \renewbibmacro*{url+urldate}{%

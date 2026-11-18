@@ -17,4 +17,21 @@
 
 \RequireCitationStyle{jpa}
 
+%%% language が japanese 以外に Japanese, ja, jp, jpn, 日本語 でも反応するようにする %%%
+% jpa.cbx の \AtEveryCitekey の後に実行され，日本語文献用の設定を上書きする
+\AtEveryCitekey{%
+  \ifthenelse{%
+    \equal{\thefirstlistitem{language}}{Japanese}\OR
+    \equal{\thefirstlistitem{language}}{ja}\OR
+    \equal{\thefirstlistitem{language}}{jp}\OR
+    \equal{\thefirstlistitem{language}}{jpn}\OR
+    \equal{\thefirstlistitem{language}}{日本語}}{%
+    \setboolean{japanese}{true}%
+    % 以下は jpa.cbx の日本語文献用の設定と同じ
+    \renewcommand*{\finalnamedelim}{\printtext{・}}%
+    \renewcommand*{\multinamedelim}{\printtext{・}}%
+    \renewcommand{\revsdnamepunct}{\space}%
+  }{}%
+}
+
 \endinput
