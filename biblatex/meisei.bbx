@@ -104,7 +104,17 @@
 %%% 書籍タイトル %%%
 % 日本語のタイトルには二重鉤括弧、外国語のタイトルは強調
 \DeclareFieldFormat[book,mvbook,online,thesis,inproceedings,incollection]{title}{%
-  \ifthenelse{\boolean{japanese}}{『\thinspace#1\thinspace』}{\emph{#1}}%
+  \ifthenelse{\boolean{japanese}}{%
+    \printtext{『}\thinspace#1%
+    \iffieldundef{subtitle}{\thinspace\printtext{』}}{}%
+  }{\emph{#1}}%
+}
+\DeclareFieldFormat[book,mvbook,online,thesis,inproceedings,incollection]{subtitle}{%
+  \ifthenelse{\boolean{japanese}}{%
+    \printtext{------}\thinspace#1\thinspace\printtext{------}\thinspace\printtext{』}\setunit{\addjspace}%
+  }{%
+    \emph{\addcolon\addspace#1}%
+  }%
 }
 
 %%% 論文タイトル %%%
