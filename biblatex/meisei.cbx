@@ -17,6 +17,46 @@
 
 \RequireCitationStyle{jpa}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% jpa.cbx（2024年1月版）に対する変更
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% et al. の表示設定 %%%
+% 日本語文献は「他」，外国語文献は textcite で「et al.」，cite・parencite で「et al.,」
+\DeclareDelimFormat[textcite]{andothersdelim}{%
+  \ifthenelse{\boolean{japanese}}
+    {他}
+    {\space{et~al.}}%
+}
+\DeclareDelimFormat[cite,parencite]{andothersdelim}{%
+  \ifthenelse{\boolean{japanese}}
+    {他}
+    {\space{et~al.,}}%
+}
+
+%%% 日本語文献で \andothersdelim を「他」に置き換えない %%%
+% jpa.cbx の \AtEveryCitekey は日本語文献で \andothersdelim を「他」にするが，
+% 上の区切り書式で扱うので，読み込み時の値に戻す
+\let\cbx@meisei@andothersdelim\andothersdelim
+\AtEveryCitekey{%
+  \ifthenelse{\boolean{japanese}}
+    {\let\andothersdelim\cbx@meisei@andothersdelim}
+    {}%
+}
+
+%% 曖昧さ回避の場合の「他」の前のコンマを削除（jpa.cbx の定義を上書き）
+\renewbibmacro*{name:andothers}{%
+  \ifthenelse{\equal{\value{listcount}}{\value{liststop}}\AND\ifmorenames}{%
+    \ifthenelse{\boolean{japanese}}{}{%
+      \ifnumgreater{\value{liststop}}{1}
+        {\finalandcomma}
+        {}}%
+      \printdelim{andothersdelim}
+    }
+{}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %%% language が japanese 以外に Japanese, ja, jp, jpn, 日本語 でも反応するようにする %%%
 % jpa.cbx の \AtEveryCitekey の後に実行され，日本語文献用の設定を上書きする
 \AtEveryCitekey{%
@@ -32,6 +72,76 @@
     \renewcommand*{\multinamedelim}{\printtext{・}}%
     \renewcommand{\revsdnamepunct}{\space}%
   }{}%
+}
+
+%%% 外国語文献の引用で最後の著者の前の区切りを「&」から「and」にする %%%
+% （Adams and Baker, 2021／Adams, Baker and Clark, 2020）
+\AtEveryCitekey{%
+  \ifthenelse{\boolean{japanese}}{}{%
+    \renewcommand*{\finalnamedelim}{\addspace and\space}%
+  }%
+}
+
+%%% \textcite の最初の文献の前に区切り（\textcitedelim）を置かない %%%
+% jpa.cbx の textcite マクロは著者名の前に \setunit{\textcitedelim} を置く。
+% 1件目では本来何も出ないはずだが，日本語文献で著者が3名以上のとき，
+% 著者名の途中で「，および」として出力されてしまう（山田・佐藤，および・鈴木）。
+% 2件目以降だけ区切りを置くようにする
+\RequirePackage{xpatch}
+\xpatchbibmacro{textcite}
+  {\setunit{\textcitedelim}}
+  {\ifnumgreater{\value{textcitecount}}{0}{\setunit{\textcitedelim}}{}}
+  {}{%
+    \PackageWarningNoLine{biblatex}{meisei.cbx: failed to patch `textcite delimiter'}%
+  }
+
+%%% \textcite で2件の文献をつなぐ語を「と」から「および」にする %%%
+% 2件：「A (2004) および B (2006)」，3件以上：「A，B，および C」（jpa.cbx と同じ）
+\renewcommand*{\textcitedelim}{%
+  \iftoggle{bbx:engmode}{%
+    \iffinalcitedelim{%
+      \ifnumgreater{\value{textcitetotal}}{2}
+        {\iftextcitepunct{\finalandsemicolon}{\finalandcomma}}{}%
+      \addspace\bibstring{and}}%
+      {\iftextcitepunct{\addsemicolon}{\addcomma}}%
+    \space%
+  }{%
+    \iffinalcitedelim{%
+      \ifnumequal{\value{textcitetotal}}{2}{%
+        \printtext{および}%
+      }{%
+        \printtext{，}%
+        \printtext{および}%
+      }%
+    }{\printtext{，}}%
+  }%
+}
+
+%%% 翻訳書の引用に訳者名を入れない %%%
+% jpa.cbx の cite:plabelyear+extradate から日本語文献の訳者名の出力を除く
+% （フリーマン (小黒 昌一訳 1977) → フリーマン (1977)）
+\renewbibmacro*{cite:plabelyear+extradate}{%
+  \iffieldundef{year}{%
+  \iffieldundef{pubstate}{\printlabeldateextra}%
+    {\printfield{pubstate}}%
+  }{%
+    \ifthenelse{\boolean{japanese}}{%
+      \iffieldundef{origyear}{}{% 翻訳書の原著出版年
+        \printorigdate%
+        \addspace}%
+      \iffieldequalstr{relatedtype}{translationof}{%
+        \entrydata*{\thefield{related}}{\printdateextra}%
+        \addspace}{}%
+      \printlabeldateextra%
+      }{%
+      \iffieldundef{origyear}{}{\printorigdate\setunit*{\addslash}}%
+      \iffieldequalstr{relatedtype}{translationof}{%
+        \entrydata*{\thefield{related}}{\printlabeldateextra}%
+        \setunit*{\addslash}%
+      }{}%
+      \printlabeldateextra%
+    }%
+  }%
 }
 
 \endinput
