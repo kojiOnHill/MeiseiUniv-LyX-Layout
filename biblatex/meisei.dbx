@@ -24,3 +24,6 @@
 % report で著者がなく機関名を著者として使ったことを示す（meisei.bbx のソースマップが設定）
 \DeclareDatamodelFields[type=field,datatype=literal]{meiseiinstauthor}
 \DeclareDatamodelEntryfields[report]{meiseiinstauthor}
+% 並べ替え用の読み（著者名の読み，著者がない場合は表題の読み）：yomi = {やまだ たろう}
+\DeclareDatamodelFields[type=field,datatype=literal]{yomi}
+\DeclareDatamodelEntryfields{yomi}

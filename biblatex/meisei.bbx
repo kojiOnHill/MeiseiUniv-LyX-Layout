@@ -287,16 +287,16 @@
             \meiseiNameKatakanaTF
               {%
                 % カタカナ名：「名・姓」の順
-                \ifblank{\namepartgiven}{}{\meiseiGivenNakaguro\printtext{・}}%
+                \ifdefvoid{\namepartgiven}{}{\meiseiGivenNakaguro\printtext{・}}%
                 \namepartfamily
               }{%
                 % 半角アルファベット名：1番目は「姓, 名」，2番目以降は「名 姓」
                 \ifnumgreater{\value{listcount}}{1}{%
-                  \ifblank{\namepartgiven}{}{\namepartgiven\space}%
+                  \ifdefvoid{\namepartgiven}{}{\namepartgiven\space}%
                   \namepartfamily
                 }{%
                   \namepartfamily
-                  \ifblank{\namepartgiven}{}{\addcomma\space\namepartgiven}%
+                  \ifdefvoid{\namepartgiven}{}{\addcomma\space\namepartgiven}%
                 }%
               }%
           }{%
@@ -312,7 +312,7 @@
         \meiseiNameKatakanaTF
           {%
             % カタカナ名：「名・姓」の順
-            \ifblank{\namepartgiven}{}{\meiseiGivenNakaguro\printtext{・}}%
+            \ifdefvoid{\namepartgiven}{}{\meiseiGivenNakaguro\printtext{・}}%
             \namepartfamily
           }{%
             % 1番目の著者は「姓, 名」，2番目以降は「名 姓」（カンマなし）
@@ -423,6 +423,84 @@
 \@for\bbx@tmp:=article,online,thesis,inproceedings,misc\do{%
   \expandafter\bbx@meisei@nypatch\expandafter\xpatchbibdriver\expandafter{\bbx@tmp}%
     {\usebibmacro{author+year}}{\setunit}{\addperiod\addspace}}
+%%% 参考文献一覧の並べ替え：読み（yomi）を優先 %%%
+% 漢字は文字コード順（部首順）に並ぶため，五十音順にしたい文献には読みを書く。
+%   著者がいる場合：yomi = {やまだ たろう}
+%   著者がない場合：yomi = {せいさくのかいせつ}（表題の読み）
+% Zotero（Better BibTeX）では「その他（Extra）」欄に tex.yomi: やまだ たろう と書く。
+% biblatex 標準の nyt から，著者等による並べ替えの先頭に yomi を加えたもの
+\DeclareSortingTemplate{nyt}{
+  \sort{
+    \field{presort}
+  }
+  \sort[final]{
+    \field{sortkey}
+  }
+  \sort{
+    \field{yomi}
+    \field{sortname}
+    \field{author}
+    \field{editor}
+    \field{translator}
+    \field{sorttitle}
+    \field{title}
+  }
+  \sort{
+    \field{sortyear}
+    \field{year}
+  }
+  \sort{
+    \field{sorttitle}
+    \field{title}
+  }
+  \sort{
+    \field{volume}
+    \literal{0}
+  }
+}
+%%% 出版年がなく閲覧日（urldate）しかない文献は，引用で年を出さない %%%
+% （Smith (2026) → Smith，(Smith, 2026) → (Smith)）
+% biblatex の既定から urldate と「n.d.」（\literal{nodate}）を除く
+\DeclareLabeldate{%
+  \field{date}
+  \field{year}
+  \field{eventdate}
+  \field{origdate}
+}
+
+% オンライン資料（@online）は参考文献一覧に出版年「(年)」を出さない
+% （著者名の後にすぐ表題を続ける。引用では従来どおり年を出す）
+% 著者がない場合は区切りも置かない（置くと表題の後に余分な空白が出る）
+\xpatchbibdriver{online}%
+  {\usebibmacro{author+year}\setunit{\bbx@nameyearpunct{\addperiod\addspace}}}%
+  {\ifnameundef{author}{}{\printnames{author}\setunit{\bbx@nameyearpunct{\addperiod\addspace}}}}{}{%
+    \PackageWarningNoLine{biblatex}{meisei.bbx: failed to patch `online'}}
+% 代わりに，発行者（organization）の後，URL の前に日付を出す
+% 英語：March 4, 2021.／日本語：2021年3月4日（月・日がなければ省略，期間は「–」でつなぐ）
+\newcommand*{\bbx@meisei@jadate}[1]{%
+  \thefield{#1year}年%
+  \iffieldundef{#1month}{}{\thefield{#1month}月%
+    \iffieldundef{#1day}{}{\thefield{#1day}日}}}
+\newbibmacro*{meisei:onlinedate}{%
+  \iffieldundef{year}{}{%
+    \ifthenelse{\boolean{japanese}}{%
+      % jpa.bbx の online ドライバは発行者の後に全角幅の空白を置いているので，空白は足さない
+      \printtext{%
+        \begingroup
+        \ifdefined\ltjsetparameter\ltjsetparameter{autoxspacing=false}\fi
+        \bbx@meisei@jadate{}%
+        \iffieldundef{endyear}{}{%
+          \bibdaterangesep
+          \iffieldequalstr{endyear}{}{}{\bbx@meisei@jadate{end}}}%
+        \endgroup}%
+    }{%
+      \newunit
+      \printtext{\mkdaterangelong{}}%
+    }}}
+\xpatchbibdriver{online}%
+  {\newunit\iffieldundef{doi}}%
+  {\usebibmacro{meisei:onlinedate}\newunit\iffieldundef{doi}}{}{%
+    \PackageWarningNoLine{biblatex}{meisei.bbx: failed to patch `online' (date)}}
 % 数巻にわたる書籍（編者・著者）
 \bbx@meisei@nypatch\xpatchbibdriver{mvbook}%
   {\usebibmacro{editor+year}}{\setunit}{\addperiod\addspace}
@@ -684,13 +762,27 @@
 % 日本語のタイトルには二重鉤括弧、外国語のタイトルは強調
 \DeclareFieldFormat[book,mvbook,online,thesis,inproceedings,incollection]{title}{%
   \ifthenelse{\boolean{japanese}}{%
-    \printtext{『}\thinspace#1%
-    \iffieldundef{subtitle}{\thinspace\printtext{』}}{}%
+    『#1%
+    \iffieldundef{subtitle}{』}{}%
   }{\mkbibitalic{#1}}%
 }
 \DeclareFieldFormat[book,mvbook,online,thesis,inproceedings,incollection]{subtitle}{%
   \ifthenelse{\boolean{japanese}}{%
-    \thinspace\printtext{------}\thinspace#1\thinspace\printtext{------}\thinspace\printtext{』}\setunit{\addjspace}%
+    ------#1------』\setunit{\addjspace}%
+  }{%
+    \mkbibitalic{\addcolon\addspace#1}%
+  }%
+}
+% オンライン資料（online）の日本語の表題は『』ではなく「」で括る（外国語はイタリックのまま）
+\DeclareFieldFormat[online]{title}{%
+  \ifthenelse{\boolean{japanese}}{%
+    「#1%
+    \iffieldundef{subtitle}{」}{}%
+  }{\mkbibitalic{#1}}%
+}
+\DeclareFieldFormat[online]{subtitle}{%
+  \ifthenelse{\boolean{japanese}}{%
+    ------#1------」\setunit{\addjspace}%
   }{%
     \mkbibitalic{\addcolon\addspace#1}%
   }%
@@ -733,15 +825,15 @@
 \ExplSyntaxOff
 \DeclareFieldFormat[article,report,misc,inbook]{title}{%
   \ifthenelse{\boolean{japanese}}{%
-    \printtext{「}\thinspace#1%
-    \iffieldundef{subtitle}{\thinspace\printtext{」}}{}%
+    「#1%
+    \iffieldundef{subtitle}{」}{}%
   }{%
     \bbx@meisei@quotedtitle{#1}%
   }%
 }
 \DeclareFieldFormat[article,report,misc,inbook]{subtitle}{%
   \ifthenelse{\boolean{japanese}}{%
-    \addthinspace\printtext{------}\thinspace#1\thinspace\printtext{------}\thinspace\printtext{」}\setunit{}%
+    ------#1------」\setunit{}%
   }{}% 外国語の副題はタイトルの引用符内で出力済み
 }
 % 論文タイトルと雑誌名の区切り：外国語は引用符内にカンマがあるので空白のみ
@@ -796,7 +888,7 @@
   \ifthenelse{\boolean{japanese}}{%
     \ifdefined\inhibitglue\inhibitglue\fi%
     \ifentrytype{article}{\thinspace}{}%
-    『\thinspace#1\thinspace』%
+    『#1』%
   }{%
     \mkbibitalic{#1}%
   }%
@@ -824,9 +916,9 @@
     \thefield{urlyear})%
   }%
 }
-% 表示
+% 表示（閲覧日がなくても URL は出す）
 \renewbibmacro*{url+urldate}{%
-  \iffieldundef{urlyear}
+  \iffieldundef{url}
   {}
   {\printfield{url}\setunit{\addspace}}\printurldate}
 
@@ -841,6 +933,61 @@
       \step[fieldset=author, origfieldval]
       \step[fieldsource=author, match=\regexp{\A(.+)\Z}, replace=\regexp{\{$1\}}]
       \step[fieldset=meiseiinstauthor, fieldvalue={true}]
+    }
+    % year に月が含まれている場合（year = {March 2020}，{2020 Mar.}，
+    % {2020年3月} など），年だけを year に残し，月は month に移す
+    % （引用が「著者 (March 2020)」のようにならないようにする）。
+    % month がすでにある場合は month をそのまま使う
+    \map{
+      \step[notfield=month, final]
+      \step[fieldsource=year, match=\regexp{\A\s*([A-Za-z]+)\.?,?\s+(\d{4})\s*\Z}, final]
+      \step[fieldset=year, fieldvalue={$2}]
+      \step[fieldset=month, fieldvalue={$1}]
+    }
+    \map{
+      \step[notfield=month, final]
+      \step[fieldsource=year, match=\regexp{\A\s*([A-Za-z]+)\.?\s*[-/\x{2013}]+\s*[A-Za-z]+\.?,?\s+(\d{4})\s*\Z}, final]
+      \step[fieldset=year, fieldvalue={$2}]
+      \step[fieldset=month, fieldvalue={$1}]
+    }
+    \map{
+      \step[notfield=month, final]
+      \step[fieldsource=year, match=\regexp{\A\s*(\d{4}),?\s+([A-Za-z]+)\.?\s*\Z}, final]
+      \step[fieldset=year, fieldvalue={$1}]
+      \step[fieldset=month, fieldvalue={$2}]
+    }
+    \map{
+      \step[notfield=month, final]
+      \step[fieldsource=year, match=\regexp{\A\s*(\d{4})\s*年\s*(\d{1,2})\s*月?\s*\Z}, final]
+      \step[fieldset=year, fieldvalue={$1}]
+      \step[fieldset=month, fieldvalue={$2}]
+    }
+    \map{
+      \step[fieldsource=year, match=\regexp{\A\s*[A-Za-z]+\.?,?\s+(\d{4})\s*\Z}, replace={$1}]
+      \step[fieldsource=year, match=\regexp{\A\s*[A-Za-z]+\.?\s*[-/\x{2013}]+\s*[A-Za-z]+\.?,?\s+(\d{4})\s*\Z}, replace={$1}]
+      \step[fieldsource=year, match=\regexp{\A\s*(\d{4}),?\s+[A-Za-z]+\.?\s*\Z}, replace={$1}]
+      \step[fieldsource=year, match=\regexp{\A\s*(\d{4})\s*年\s*\d{1,2}\s*月?\s*\Z}, replace={$1}]
+    }
+    % 開始と終了が同じ年の期間（date = {1973-05/1973-06} など）は開始日だけにする
+    % （「著者 (1973–1973)」とならないようにする）
+    \map{
+      \step[fieldsource=date, match=\regexp{\A\s*(\d{4})((?:-\d\d){0,2})\s*/\s*\1(?:-\d\d){0,2}\s*\Z}, replace={$1$2}]
+    }
+    % 月名（英語）を数字にする（March → 3）
+    \map{
+      \step[fieldsource=month, match=\regexp{\A\s*(?i:jan(?:uary)?)\.?\s*\Z}, replace={1}]
+      \step[fieldsource=month, match=\regexp{\A\s*(?i:feb(?:ruary)?)\.?\s*\Z}, replace={2}]
+      \step[fieldsource=month, match=\regexp{\A\s*(?i:mar(?:ch)?)\.?\s*\Z}, replace={3}]
+      \step[fieldsource=month, match=\regexp{\A\s*(?i:apr(?:il)?)\.?\s*\Z}, replace={4}]
+      \step[fieldsource=month, match=\regexp{\A\s*(?i:may)\.?\s*\Z}, replace={5}]
+      \step[fieldsource=month, match=\regexp{\A\s*(?i:june?)\.?\s*\Z}, replace={6}]
+      \step[fieldsource=month, match=\regexp{\A\s*(?i:july?)\.?\s*\Z}, replace={7}]
+      \step[fieldsource=month, match=\regexp{\A\s*(?i:aug(?:ust)?)\.?\s*\Z}, replace={8}]
+      \step[fieldsource=month, match=\regexp{\A\s*(?i:sep(?:t(?:ember)?)?)\.?\s*\Z}, replace={9}]
+      \step[fieldsource=month, match=\regexp{\A\s*(?i:oct(?:ober)?)\.?\s*\Z}, replace={10}]
+      \step[fieldsource=month, match=\regexp{\A\s*(?i:nov(?:ember)?)\.?\s*\Z}, replace={11}]
+      \step[fieldsource=month, match=\regexp{\A\s*(?i:dec(?:ember)?)\.?\s*\Z}, replace={12}]
+      \step[fieldsource=month, match=\regexp{\A\s*(\d{1,2})\s*月\s*\Z}, replace={$1}]
     }
   }
 }

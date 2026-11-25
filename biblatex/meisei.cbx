@@ -95,6 +95,89 @@
     \PackageWarningNoLine{biblatex}{meisei.cbx: failed to patch `textcite delimiter'}%
   }
 
+%%% 年のない文献（閲覧日しかないオンライン資料など）は同一著者でまとめない %%%
+% jpa.cbx は同じ著者の文献が続くと「Smith (2021, 2026)」のように年だけを並べるが，
+% 年のない文献ではこれができない（「Smith (2026)」だけになる）。
+% 年のない文献はまとめず，その次の文献もまとめないようにする
+% （Smith; Smith; Smith (2026)）
+\newcommand*{\cbx@meisei@samehash}{%
+  \ifboolexpr{test {\iffieldundef{labelyear}} or not test {\iffieldequals{namehash}{\cbx@lasthash}}}
+    {\@secondoftwo}{\@firstoftwo}}
+\newcommand*{\cbx@meisei@savehash}{%
+  \iffieldundef{labelyear}{\global\undef\cbx@lasthash}{\savefield{namehash}{\cbx@lasthash}}}
+% jpa.cbx の textcite は著者名の直後の改行が空白として出力される。年が続く場合は
+% 区切りの空白に紛れるが，年がないと「Smith ，Smith」となるので取り除く
+\xpatchbibmacro{textcite}
+  {\setunit{\global\booltrue{cbx:parens}\printdelim{nameyeardelim}\bibopenparen}}
+  {\unspace\setunit{\global\booltrue{cbx:parens}\printdelim{nameyeardelim}\bibopenparen}}
+  {}{\PackageWarningNoLine{biblatex}{meisei.cbx: failed to patch `textcite' (space)}}
+%%% 前置き（prenote）の位置 %%%
+% \textcite の前置きを括弧の中（Smith (see 2020)）ではなく，引用の前に出す（see Smith (2020)）
+\xpatchbibmacro{textcite}
+  {\ifnumequal{\value{citecount}}{1} {\usebibmacro{prenote}} {}}
+  {}
+  {}{\PackageWarningNoLine{biblatex}{meisei.cbx: failed to patch `textcite' (prenote 1)}}
+\xpatchbibmacro{textcite}
+  {\ifnumgreater{\value{textcitecount}}{0}{\setunit{\textcitedelim}}{}}
+  {\ifnumgreater{\value{textcitecount}}{0}{\setunit{\textcitedelim}}{}\ifnumequal{\value{citecount}}{1}{\usebibmacro{prenote}}{}}
+  {}{\PackageWarningNoLine{biblatex}{meisei.cbx: failed to patch `textcite' (prenote 2)}}
+% 日本語文献で前置きが「see」（または「参照」）のときは，引用の後に「参照」を付ける
+%   \textcite：ウェブページ「統計DB」(1991)参照／山田 (1991)参照
+%   \parencite：(山田, 1991参照)
+% \parencite などは前置きを文献の処理より前に出すため，「see」はいったん保留し，
+% 1件目の文献の言語がわかった時点で英語なら「see」を出す
+\newbool{cbx@meisei@seepending}
+\newbool{cbx@meisei@jasee}
+\newbool{cbx@meisei@inloop}% 文献ごとの処理に入ったら真
+\AtEveryCite{%
+  \global\boolfalse{cbx@meisei@seepending}%
+  \global\boolfalse{cbx@meisei@jasee}%
+  \global\boolfalse{cbx@meisei@inloop}}
+\AtEveryCitekey{\global\booltrue{cbx@meisei@inloop}}
+\newcommand*{\cbx@meisei@ifseeprenote}{%
+  \ifboolexpr{test {\iffieldequalstr{prenote}{see}}
+    or test {\iffieldequalstr{prenote}{See}}
+    or test {\iffieldequalstr{prenote}{参照}}}}
+\newcommand*{\cbx@meisei@resolvesee}{%
+  \global\boolfalse{cbx@meisei@seepending}%
+  \ifthenelse{\boolean{japanese}}
+    {\global\booltrue{cbx@meisei@jasee}}
+    {\printfield{prenote}\setunit{\prenotedelim}}}
+\letbibmacro*{cbx@meisei@prenote@orig}{prenote}
+\renewbibmacro*{prenote}{%
+  \cbx@meisei@ifseeprenote
+    {\ifbool{cbx@meisei@inloop}
+       {\cbx@meisei@resolvesee}
+       {\global\booltrue{cbx@meisei@seepending}}}
+    {\usebibmacro{cbx@meisei@prenote@orig}}}
+\xpretobibmacro{cite}
+  {\ifbool{cbx@meisei@seepending}{\cbx@meisei@resolvesee}{}}
+  {}{\PackageWarningNoLine{biblatex}{meisei.cbx: failed to patch `cite' (prenote)}}
+% 「参照」の出力：\textcite は閉じ括弧の後，それ以外は後注（postnote）の後
+\newcommand*{\cbx@meisei@printjasee}{%
+  \ifbool{cbx@meisei@jasee}
+    {\setunit{}\printtext{参照}\global\boolfalse{cbx@meisei@jasee}}
+    {}}
+\xapptobibmacro{postnote}
+  {\ifboolexpr{test {\ifdefstring{\blx@delimcontext}{textcite}}
+      or test {\ifdefstring{\blx@delimcontext}{cbx@textcite}}}
+     {}{\cbx@meisei@printjasee}}
+  {}{\PackageWarningNoLine{biblatex}{meisei.cbx: failed to patch `postnote'}}
+\xapptobibmacro{textcite:postnote}
+  {\ifnumequal{\value{multicitecount}}{\value{multicitetotal}}{\cbx@meisei@printjasee}{}}
+  {}{\PackageWarningNoLine{biblatex}{meisei.cbx: failed to patch `textcite:postnote'}}
+
+\@for\cbx@tmp:=textcite,cite\do{%
+  \expandafter\xpatchbibmacro\expandafter{\cbx@tmp}
+    {\iffieldequals{namehash}{\cbx@lasthash}}
+    {\cbx@meisei@samehash}
+    {}{\PackageWarningNoLine{biblatex}{meisei.cbx: failed to patch `\cbx@tmp' (1)}}%
+  \expandafter\xpatchbibmacro\expandafter{\cbx@tmp}
+    {\savefield{namehash}{\cbx@lasthash}}
+    {\cbx@meisei@savehash}
+    {}{\PackageWarningNoLine{biblatex}{meisei.cbx: failed to patch `\cbx@tmp' (2)}}%
+}
+
 %%% \textcite で2件の文献をつなぐ語を「と」から「および」にする %%%
 % 2件：「A (2004) および B (2006)」，3件以上：「A，B，および C」（jpa.cbx と同じ）
 \renewcommand*{\textcitedelim}{%
@@ -117,12 +200,35 @@
   }%
 }
 
+%%% 引用での閲覧日の表示（参考文献一覧の urldate の書式からかっこを除いたもの）%%%
+\newbibmacro*{cite:meisei:urldate}{%
+  \printtext{%
+    \ifthenelse{\boolean{japanese}}{%
+      \begingroup
+      \ifdefined\ltjsetparameter\ltjsetparameter{autoxspacing=false}\fi
+      \thefield{urlyear}年%
+      \iffieldundef{urlmonth}{}{\thefield{urlmonth}月}%
+      \iffieldundef{urlday}{}{\thefield{urlday}日}\ 参照%
+      \endgroup
+    }{%
+      accessed
+      \iffieldundef{urlmonth}{}{\mkbibmonth{\thefield{urlmonth}}\addspace}%
+      \iffieldundef{urlday}{}{\thefield{urlday}\addcomma\addspace}%
+      \thefield{urlyear}%
+    }}%
+}
+
 %%% 翻訳書の引用に訳者名を入れない %%%
 % jpa.cbx の cite:plabelyear+extradate から日本語文献の訳者名の出力を除く
 % （フリーマン (小黒 昌一訳 1977) → フリーマン (1977)）
+% 出版年がなく閲覧日（urldate）しかない文献は，年の代わりに閲覧日を出す
+% （Smith (accessed May 19, 2026)，佐藤 (2026年5月19日 参照)）
 \renewbibmacro*{cite:plabelyear+extradate}{%
   \iffieldundef{year}{%
-  \iffieldundef{pubstate}{\printlabeldateextra}%
+  \iffieldundef{pubstate}{%
+    \iffieldundef{labelyear}
+      {\iffieldundef{urlyear}{}{\usebibmacro{cite:meisei:urldate}}}
+      {\printlabeldateextra}}%
     {\printfield{pubstate}}%
   }{%
     \ifthenelse{\boolean{japanese}}{%
@@ -142,6 +248,81 @@
       \printlabeldateextra%
     }%
   }%
+}
+
+%%% 日付も閲覧日もないオンライン資料（online）の引用 %%%
+% 著者あり：「Smith のウェブページ」
+% 著者なし・shorttitle あり：「ウェブページ「shorttitle」」
+% 著者も shorttitle もなし：「ウェブページ「title」」
+% （\parencite では「(Smith のウェブページ)」のように括弧の中に出す）
+% 著者がなく日付（date）がある場合は後に年を付ける（閲覧日の有無は問わない）
+%   「ウェブページ「統計DB」(1991)」，英語は「web page “Stats Portal” (1995)」
+%   （\parencite では「(ウェブページ「統計DB」, 1991)」）
+\newcommand*{\cbx@meisei@ifwebnodate}{%
+  \ifboolexpr{test {\ifentrytype{online}}
+    and (
+      (test {\iffieldundef{labelyear}} and test {\iffieldundef{urlyear}})
+      or
+      (test {\ifnameundef{labelname}} and not test {\iffieldundef{labelyear}})
+    )}}
+% 「ウェブページ「…」」の後は空白を入れない。英語は通常の区切り（空白）
+\newcommand*{\cbx@meisei@webyeardelim}{%
+  \ifthenelse{\boolean{japanese}}{}{\printdelim{nameyeardelim}}}
+% 英語文献：「Smith's web page」，著者なしは「web page “shorttitle”」（または title）
+\newbibmacro*{cite:meisei:webpage}{%
+  \ifthenelse{\boolean{japanese}}{%
+    \ifnameundef{labelname}{%
+      \printtext{%
+        ウェブページ「%
+        \iffieldundef{shorttitle}
+          {\printfield[noformat]{title}}
+          {\printfield[noformat]{shorttitle}}%
+        」}%
+    }{%
+      \printnames{labelname}%
+      \printtext{のウェブページ}%
+    }%
+  }{%
+    \ifnameundef{labelname}{%
+      \printtext{%
+        web page\space\mkbibquote{%
+        \iffieldundef{shorttitle}
+          {\printfield[noformat]{title}}
+          {\printfield[noformat]{shorttitle}}}}%
+    }{%
+      \printnames{labelname}%
+      \printtext{'s web page}%
+    }%
+  }%
+}
+% 上のパッチを適用済みの textcite・cite を保存し，該当する文献だけ置き換える
+\letbibmacro*{cbx@meisei@textcite@orig}{textcite}
+\renewbibmacro*{textcite}{%
+  \cbx@meisei@ifwebnodate
+    {\ifbool{cbx:parens}
+       {\bibcloseparen\global\boolfalse{cbx:parens}}
+       {}%
+     \ifnumgreater{\value{textcitecount}}{0}{\setunit{\textcitedelim}}{}%
+     \ifnumequal{\value{citecount}}{1}{\usebibmacro{prenote}}{}%
+     \usebibmacro{cite:meisei:webpage}%
+     \iffieldundef{labelyear}{}
+       {\setunit{\global\booltrue{cbx:parens}\cbx@meisei@webyeardelim\bibopenparen}%
+        \usebibmacro{cite:plabelyear+extradate}}%
+     \global\undef\cbx@lasthash
+     \stepcounter{textcitecount}}
+    {\usebibmacro{cbx@meisei@textcite@orig}}%
+}
+\letbibmacro*{cbx@meisei@cite@orig}{cite}
+\renewbibmacro*{cite}{%
+  \cbx@meisei@ifwebnodate
+    {\ifbool{cbx@meisei@seepending}{\cbx@meisei@resolvesee}{}%
+     \usebibmacro{cite:meisei:webpage}%
+     \iffieldundef{labelyear}{}{%
+       \setunit{\printdelim{nameyeardelim}}%
+       \usebibmacro{cite:plabelyear+extradate}}%
+     \global\undef\cbx@lasthash
+     \setunit{\multicitedelim}}
+    {\usebibmacro{cbx@meisei@cite@orig}}%
 }
 
 \endinput
